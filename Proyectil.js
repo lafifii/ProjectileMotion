@@ -8,7 +8,6 @@ function Proyectil(){
   this.rho = 1.20
   this.cd = 0.500
   this.k = 0.5 * this.cd * this.rho * (pi * this.rad * this.rad)
-
   this.ts = [0.00]
   this.x = [0]
   this.y = [0]
@@ -18,44 +17,38 @@ function Proyectil(){
   this.ts2 = [0]
 
   this.animate = -1;
-
-  this.old_min_x = 0;
-  this.old_max_x = 0;
-  this.old_min_y = 0;
-  this.old_max_y = 0;
-
   this.dummy_y = 0;
 
   this.scale_xy = function(xx, yy){
-    var new_min_x = w/20;
-    var new_max_x = w - w/20;
-
-    var new_min_y = h/10;
-    var new_max_y = h - h/10;
-
-    var nx = (new_max_x - new_min_x) / (this.old_max_x - this.old_min_x) * (xx - this.old_min_x) + new_min_x;
-    var ny = (new_max_y - new_min_y) / (this.old_max_y - this.old_min_y) * (yy - this.old_min_y) + new_min_y;
-
-    return [nx, ny];
+    return [w/20 + xx, h/10 + yy*10];
   }
 
-  this.rescale_y = function(ny){
-    var new_min_y = h/10;
-    var new_max_y = h - h/10;
-    return ( (ny - new_min_y)*(this.old_max_y - this.old_min_y)/(new_max_y - new_min_y) ) + this.old_min_y ;
+  this.draw_axis = function(){
+    stroke(255,255,255,20)
+    for(var i = 0; i < h - h/10; i+=30){
+      line(0, h/10 + i*5, w, h/10 + i*5);
+    }
+
+    for(var i = 0; i < w - w/20; i+=30){
+      line(i, 0, i, h - h/10);
+    }
+
   }
 
   this.draw = function(){
 
-    stroke('white')
-    fill('white')
-    textSize(20)
-    text("Movimiento Proyectil", 30 , 30)
 
+    this.draw_axis();
     noStroke();
-
     fill(255,2555,255,10)
     rect(0, h - h/10, w, h/10)
+    fill(0)
+    stroke(255)
+
+    if(this.dummy_y != 0)
+      rect(w/20 - 20, h - h/10, 40, this.dummy_y + this.rad*50)
+
+    noStroke();
 
     if(this.animate >= 0){
 
@@ -84,14 +77,15 @@ function Proyectil(){
     }
   }
 
-  this.calculate = function(){
+  this.calculate = function(v0){
     if(this.animate >= 0){
       this.animate = -1
       this.dummy_y =  0
       return;
     }
-    var angle = 45 * pi / 180.0
-    var v0 = 60
+
+    var angle = 30 * pi / 180.0
+
     this.calculate_air(angle, v0)
     this.calculate_no_air(angle, v0)
     this.animate = 0;
@@ -101,7 +95,8 @@ function Proyectil(){
 
      this.ts = [0.00]
      this.x = [0]
-     this.y = [0]
+     this.y = [-this.dummy_y/10]
+
 
 
      this.vx = [v0 * Math.cos(angle)]
@@ -131,18 +126,13 @@ function Proyectil(){
       	this.y.push(new_y)
         i++;
 
-        if(this.old_min_x > this.x[i]) this.old_min_x = this.x[i];
-        if(this.old_max_x < this.x[i]) this.old_max_x = this.x[i];
-        if(this.old_min_y > this.y[i]) this.old_min_y = this.y[i];
-        if(this.old_max_y < this.y[i]) this.old_max_y = this.y[i];
-
     }
   }
 
   this.calculate_no_air = function(angle, v0){
 
      this.x2 = [0]
-     this.y2 = [0]
+     this.y2 = [-this.dummy_y/10]
      this.ts2 = [0]
 
 
@@ -162,11 +152,6 @@ function Proyectil(){
         this.ts2.push(this.ts2[i] + delta)
         this.x2.push(new_x)
         this.y2.push(new_y)
-
-        if(this.old_min_x > this.x2[i]) this.old_min_x = this.x2[i];
-        if(this.old_max_x < this.x2[i]) this.old_max_x = this.x2[i];
-        if(this.old_min_y > this.y2[i]) this.old_min_y = this.y2[i];
-        if(this.old_max_y < this.y2[i]) this.old_max_y = this.y2[i];
 
         i++;
     }
