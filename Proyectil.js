@@ -52,7 +52,6 @@ function Proyectil(){
     textSize(20)
     text("Movimiento Proyectil", 30 , 30)
 
-    var xy;
     noStroke();
 
     fill(255,2555,255,10)
@@ -67,22 +66,15 @@ function Proyectil(){
         circle(xy[0], h - xy[1], this.rad*100);
       }
 
-      fill('cyan')
-      xy = this.scale_xy(this.x[lim], this.y[lim])
-      circle(xy[0], h - xy[1], this.rad*100)
 
-
-      lim = this.animate >= this.x2.length ? this.x2.length - 1 : this.animate;
-      for(var i = 0; i < lim; i+=10){
+      var lim2 = this.animate >= this.x2.length ? this.x2.length - 1 : this.animate;
+      for(var i = 0; i < lim2; i+=10){
         fill(255,255,255,10);
         var xy = this.scale_xy(this.x2[i], this.y2[i]);
         circle(xy[0], h - xy[1], this.rad*100);
       }
 
-      fill('magenta')
-      xy = this.scale_xy(this.x2[lim], this.y2[lim])
-      circle(xy[0], h - xy[1], this.rad*100)
-
+      this.draw_velocity(lim,lim2)
       this.animate+=10;
 
     }
@@ -112,28 +104,28 @@ function Proyectil(){
      this.y = [0]
 
 
-     var vx = [v0 * Math.cos(angle)]
-     var vy = [v0 * Math.sin(angle)]
-     var ax = [-(this.k/this.m) * 60.0 * vx[0]]
-     var ay = [-g - ((this.k/this.m) * 60.0 * vy[0])]
+     this.vx = [v0 * Math.cos(angle)]
+     this.vy = [v0 * Math.sin(angle)]
+     var ax = [-(this.k/this.m) * 60.0 * this.vx[0]]
+     var ay = [-g - ((this.k/this.m) * 60.0 * this.vy[0])]
 
      var i = 0;
      var delta = 0.01;
 
      while(this.y[i] >= 0.0){
 
-        var vel = Math.sqrt((vx[i] * vx[i]) + (vy[i] * vy[i]));
+        var vel = Math.sqrt((this.vx[i] * this.vx[i]) + (this.vy[i] * this.vy[i]));
 
-      	ax.push(-(this.k/this.m) * vel * vx[i])
-      	ay.push(-g - ((this.k/this.m) * vel * vy[i]))
+      	ax.push(-(this.k/this.m) * vel * this.vx[i])
+      	ay.push(-g - ((this.k/this.m) * vel * this.vy[i]))
 
-        var new_vx = vx[i] + (ax[i+1] * delta)
-      	var new_vy = vy[i] + (ay[i+1] * delta)
-      	var new_x = this.x[i] + (vx[i] * delta) + (0.5 * ax[i+1] * (delta * delta))
-      	var new_y = this.y[i] + (vy[i] * delta) + (0.5 * ay[i+1] * (delta * delta))
+        var new_vx = this.vx[i] + (ax[i+1] * delta)
+      	var new_vy = this.vy[i] + (ay[i+1] * delta)
+      	var new_x = this.x[i] + (this.vx[i] * delta) + (0.5 * ax[i+1] * (delta * delta))
+      	var new_y = this.y[i] + (this.vy[i] * delta) + (0.5 * ay[i+1] * (delta * delta))
 
-        vx.push(new_vx)
-      	vy.push(new_vy)
+        this.vx.push(new_vx)
+      	this.vy.push(new_vy)
         this.ts.push(this.ts[i] + delta)
       	this.x.push(new_x)
       	this.y.push(new_y)
@@ -156,17 +148,17 @@ function Proyectil(){
 
      var i = 0;
      var delta = 0.01;
-     var vx2 = [v0 * Math.cos(angle)]
-     var vy2 = [v0 * Math.sin(angle)]
+     this.vx2 = [v0 * Math.cos(angle)]
+     this.vy2 = [v0 * Math.sin(angle)]
 
      while(this.y2[i] >= 0.0){
-        var new_vx = vx2[i]
-        var new_vy = vy2[i] + (-g * delta)
-        var new_x = this.x2[i] + (vx2[i] * delta) + (0.5 * 0 * (delta * delta))
-        var new_y = this.y2[i] + (vy2[i] * delta) + (0.5 * (-g) * (delta * delta))
+        var new_vx = this.vx2[i]
+        var new_vy = this.vy2[i] + (-g * delta)
+        var new_x = this.x2[i] + (this.vx2[i] * delta) + (0.5 * 0 * (delta * delta))
+        var new_y = this.y2[i] + (this.vy2[i] * delta) + (0.5 * (-g) * (delta * delta))
 
-        vx2.push(new_vx)
-        vy2.push(new_vy)
+        this.vx2.push(new_vx)
+        this.vy2.push(new_vy)
         this.ts2.push(this.ts2[i] + delta)
         this.x2.push(new_x)
         this.y2.push(new_y)
@@ -178,6 +170,54 @@ function Proyectil(){
 
         i++;
     }
+  }
+
+  this.draw_velocity = function(id1,id2){
+    var a_1 = this.scale_xy(this.x[id1], this.y[id1])
+    var a_2 = this.scale_xy(this.x2[id2], this.y2[id2])
+
+    // vel_1
+    if(this.animate <= id1){
+     this.draw_arrow(a_1, [a_1[0] + 45, a_1[1]])
+     this.draw_arrow(a_1, [a_1[0], a_1[1] + 45*Math.sign(this.vy[id1]) ])
+     this.draw_arrow(a_1, [a_1[0] + 40, a_1[1] + 40*Math.sign(this.vy[id1]) ])
+    }
+
+    // vel_2
+    if(this.animate <= id2){
+     this.draw_arrow(a_2, [a_2[0] + 45, a_2[1]])
+     this.draw_arrow(a_2, [a_2[0], a_2[1] + 45*Math.sign(this.vy2[id2]) ])
+     this.draw_arrow(a_2, [a_2[0] + 40, a_2[1] + 40*Math.sign(this.vy2[id2]) ])
+    }
+
+    fill('cyan')
+    circle(a_1[0], h - a_1[1], this.rad*100)
+    fill('magenta')
+    circle(a_2[0], h - a_2[1], this.rad*100)
+
+  }
+
+  this.draw_arrow = function(a2,b2) {
+
+    a = a2.slice()
+    b = b2.slice()
+
+    a[1] = h - a[1]
+    b[1] = h - b[1]
+
+    stroke('#2E4057');
+    line(a[0], a[1], b[0], b[1])
+    push();
+    var offset = 10;
+    var angle = atan2(a[1] - b[1], a[0] - b[0]);
+
+    translate(b[0], b[1] );
+    rotate(angle-HALF_PI);
+
+    fill('#2E4057');
+    triangle(-offset*0.5, offset, offset*0.5, offset, 0, -offset/2);
+    pop();
+    noStroke();
   }
 
   this.addStart = function(dd){
