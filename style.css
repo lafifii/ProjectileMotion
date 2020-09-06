@@ -10,3 +10,9 @@ canvas {
 .derecha{
 
 }
+
+h2{
+  display: grid;
+  background-color: white;
+  width: 30px;
+}

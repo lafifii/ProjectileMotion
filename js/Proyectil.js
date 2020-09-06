@@ -3,11 +3,10 @@ const g = 9.81;
 
 function Proyectil(){
 
-  this.m = 0.200
-  this.rad = 0.2
   this.rho = 1.20
   this.cd = 0.500
-  this.k = 0.5 * this.cd * this.rho * (pi * this.rad * this.rad)
+  this.m = 0.200
+  this.rad = 0.2
   this.ts = [0.00]
   this.x = [0]
   this.y = [0]
@@ -20,7 +19,7 @@ function Proyectil(){
   this.dummy_y = 0;
 
   this.scale_xy = function(xx, yy){
-    return [w/20 + xx, h/10 + yy*10];
+    return [w/15 + xx, h/10 + yy*10];
   }
 
   this.draw_axis = function(){
@@ -29,14 +28,19 @@ function Proyectil(){
       line(0, h/10 + i*5, w, h/10 + i*5);
     }
 
-    for(var i = 0; i < w - w/20; i+=30){
+    for(var i = 0; i < w - w/15; i+=30){
       line(i, 0, i, h - h/10);
     }
 
   }
 
-  this.draw = function(){
+  this.update = function(angle, rad){
+    if(this.animate >= 0) return
+    this.rad = rad
+    this.angle = angle
+  }
 
+  this.draw = function(){
 
     this.draw_axis();
     noStroke();
@@ -46,9 +50,10 @@ function Proyectil(){
     stroke(255)
 
     if(this.dummy_y != 0)
-      rect(w/20 - 20, h - h/10, 40, this.dummy_y + this.rad*50)
+      rect(w/15 - 20, h - h/10, 40, this.dummy_y + this.rad*50)
 
     noStroke();
+
 
     if(this.animate >= 0){
 
@@ -72,9 +77,23 @@ function Proyectil(){
 
     }
     else {
+
+      push()
+      let v = p5.Vector.fromAngle(radians(-this.angle), 120);
+      let vx = v.x;
+      let vy = v.y;
+      translate(w/15, h - h/10 + this.dummy_y)
+      stroke('white')
+      line(0, 0, 120, 0);
+      line(0, 0, vx, vy);
+      pop()
+
+      noStroke()
       fill('magenta')
-      circle(w/20, h - h/10 + this.dummy_y, this.rad*100)
+      circle(w/15, h - h/10 + this.dummy_y, this.rad*100)
     }
+
+
   }
 
   this.calculate = function(v0){
@@ -84,10 +103,10 @@ function Proyectil(){
       return;
     }
 
-    var angle = 30 * pi / 180.0
-
-    this.calculate_air(angle, v0)
-    this.calculate_no_air(angle, v0)
+    this.k = 0.5 * this.cd * this.rho * (pi * this.rad * this.rad)
+    var angle_rad = this.angle * pi / 180.0
+    this.calculate_air(angle_rad, v0)
+    this.calculate_no_air(angle_rad, v0)
     this.animate = 0;
   }
 
@@ -174,6 +193,17 @@ function Proyectil(){
      this.draw_arrow(a_2, [a_2[0], a_2[1] + 45*Math.sign(this.vy2[id2]) ])
      this.draw_arrow(a_2, [a_2[0] + 40, a_2[1] + 40*Math.sign(this.vy2[id2]) ])
     }
+
+    // time
+    var time = this.animate
+    if(this.animate > id1 && this.animate > id2)
+      time = id1 > id2 ? id1 : id2
+
+    textSize(30)
+    fill('white')
+    var txt = "tiempo: " + time/100
+    text(txt,w/2 - textWidth(txt)/2, w/10)
+
 
     fill('cyan')
     circle(a_1[0], h - a_1[1], this.rad*100)

@@ -1,42 +1,31 @@
 var p;
-var v0 = 60;
-var angulo = 45;
-var rad = 0.02;
-var w = window.innerWidth - 30;
-var h = window.innerHeight - 30;
+var w = window.innerWidth;
+var h = window.innerHeight;
 
-var buttonAng, buttonRad, buttonStart;
+var sliderAng, sliderRad, sliderV0, buttonStart;
+
 
 window.onresize = function() {
-  w = window.innerWidth - 30;
-  h = window.innerHeight - 30;
+  w = window.innerWidth;
+  h = window.innerHeight;
   resizeCanvas(w, h);
+  buttonStart.resize()
 }
 
 function preload(){
-  buttonAng = new Option(['Cambiar Angulo'],1,45)
-  buttonAng.button.mousePressed(changeAng)
 
-  buttonRad = new Option(['Cambiar Radio'], 1 , 0.02)
-  buttonRad.button.mousePressed(changeRad)
+  buttonStart = new Clickable(['iniciar', 'reiniciar'])
 
-  buttonStart = new Option(['Iniciar', 'Reiniciar'], 0)
-  buttonStart.button.mousePressed(start_animation)
-}
+  sliderV0 = createSlider(1,300,60)
+  sliderV0.position(20, 40)
 
-function valid(input_val){
-  if(input_val == "" || isNaN(input_val)) return 0;
-  return 1;
-}
+  sliderAng = createSlider(0,90,45)
+  sliderAng.position(20, 80)
 
-function changeAng(){
-  if(valid(buttonAng.inputs[0]) != 0)
-    angulo = parseInt(buttonAng.inputs[0])
-}
+  sliderRad = createSlider(1,100,20)
+  sliderRad.position(20, 120)
 
-function changeRad(){
-  if(valid(buttonRad.inputs[0]) != 0)
-    rad = parseInt(buttonRad.inputs[0])
+
 }
 
 function setup() {
@@ -49,29 +38,63 @@ function setup() {
 function draw() {
 
   background(0);
-  p.draw();
 
+
+  p.update(sliderAng.value(), sliderRad.value()/100)
+  p.draw()
+
+  printSliders()
   printInfo()
 
+  if(buttonStart.over()) cursor(HAND)
+  else cursor(ARROW)
+
+}
+
+function printSliders(){
+  noStroke()
+  fill('white')
+  textSize(15)
+
+  text('v0', sliderV0.x + sliderV0.width/2 - textWidth('v0')/2, sliderV0.y)
+  text('angulo', sliderAng.x + sliderAng.width/2 - textWidth('angulo')/2, sliderAng.y)
+  text('radio', sliderRad.x + sliderRad.width/2 - textWidth('radio')/2, sliderRad.y)
 }
 
 function printInfo(){
   noStroke()
+
+  buttonStart.draw()
+
   fill('white')
   textSize(15)
+
   var txt
-  txt = "Velocidad Inicial: " + v0
-  text(txt, w - textWidth(txt) - 10 , 25)
+  txt = "Velocidad Inicial: " + sliderV0.value() + " m/s"
+  text(txt, w - textWidth(txt) - 10 , 80)
 
-  txt = "Angulo: " + angulo
-  text("Angulo: " + angulo, w - textWidth(txt) - 10 , 45)
+  txt = "Angulo: " + sliderAng.value() + " °"
+  text(txt, w - textWidth(txt) - 10 , 100)
 
-  txt = "Radio: " + rad
-  text("Radio: " + rad, w - textWidth(txt) - 10 , 65)
+  txt = "Radio: " + sliderRad.value()/100 + " m"
+  text(txt, w - textWidth(txt) - 10 , 120)
+
+  txt = "Densidad: " + p.rho + " kg/m^3"
+  text(txt, w - textWidth(txt) - 10 , 140)
+
+  txt = "Peso: " + p.cd + " kg"
+  text(txt, w - textWidth(txt) - 10 , 160)
+
+  txt = "Altura: " + (-p.dummy_y) + " m"
+  text(txt, w - textWidth(txt) - 10 , 180)
+
 }
-function start_animation(){
-  buttonStart.change_text()
-  p.calculate(v0);
+
+
+function mousePressed(){
+  if(buttonStart.click()){
+    p.calculate(sliderV0.value(), sliderAng.value());
+  }
 }
 
 function keyPressed() {
@@ -81,9 +104,9 @@ function keyPressed() {
     p.addStart(+10);
   }
   else if(key == '+'){
-    v0++;
+    sliderAng.value()++;
   }
   else if(key == '-'){
-    v0--;
+    sliderAng.value()--;
   }
 }
