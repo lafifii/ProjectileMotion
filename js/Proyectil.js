@@ -19,17 +19,17 @@ function Proyectil(){
   this.dummy_y = 0;
 
   this.scale_xy = function(xx, yy){
-    return [w/15 + xx, h/10 + yy];
+    return [w/15 + xx*2, h/10 + yy*2];
   }
 
   this.draw_axis = function(){
     stroke(255,255,255,20)
-    for(var i = (h - h/10)/10; i >= 0; i--){
-      line(0, i*10, w, i*10);
+    for(var i = 0; (h - h/10) - i*20 >= 0 ; i++){
+      line(0, (h - h/10) - i*20, w, (h - h/10) - i*20);
     }
 
     for(var i = 0; i < w - w/15; i++){
-      line(i*10, 0, i*10, h - h/10);
+      line(i*20, 0, i*20, h - h/10);
     }
 
   }
@@ -100,7 +100,6 @@ function Proyectil(){
   this.calculate = function(v0){
     if(this.animate >= 0){
       this.animate = -1
-      this.dummy_y =  0
       return;
     }
 
@@ -115,7 +114,7 @@ function Proyectil(){
 
      this.ts = [0.00]
      this.x = [0]
-     this.y = [-this.dummy_y]
+     this.y = [-this.dummy_y/2]
 
 
 
@@ -152,7 +151,7 @@ function Proyectil(){
   this.calculate_no_air = function(angle, v0){
 
      this.x2 = [0]
-     this.y2 = [-this.dummy_y]
+     this.y2 = [-this.dummy_y/2]
      this.ts2 = [0]
 
 
@@ -203,7 +202,7 @@ function Proyectil(){
     textSize(30)
     fill('white')
     var txt = "tiempo: " + time/100
-    text(txt,w/2 - textWidth(txt)/2, w/10)
+    text(txt,w/2 - textWidth(txt)/2, 140)
 
 
     fill('cyan')

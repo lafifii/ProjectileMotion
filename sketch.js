@@ -85,14 +85,26 @@ function printInfo(){
   txt = "Densidad: " + p.rho + " kg/m^3"
   text(txt, w - textWidth(txt) - 10 , 140)
 
-  txt = "Peso: " + p.cd + " kg"
+  txt = "Altura: " + (-p.dummy_y) + " m"
   text(txt, w - textWidth(txt) - 10 , 160)
 
-  txt = "Altura: " + (-p.dummy_y) + " m"
+  txt = "Masa: " + sliderM.value() + " g"
   text(txt, w - textWidth(txt) - 10 , 180)
 
-  txt = "Masa: " + p.m + " g"
-  text(txt, w - textWidth(txt) - 10 , 200)
+  var txtw = 60
+
+  fill('cyan')
+  square(w/2 - 10 - txtw, 30, 20)
+
+  fill('magenta')
+  square(w/2 - 10 - txtw, 60, 20)
+
+  fill('white')
+  text("con resistencia", w/2 - txtw + 20, 45)
+
+  fill('white')
+  text("sin resistencia", w/2 - txtw + 20, 75)
+
 }
 
 
@@ -107,11 +119,5 @@ function keyPressed() {
     p.addStart(-10);
   } else if (keyCode === DOWN_ARROW) {
     p.addStart(+10);
-  }
-  else if(key == '+'){
-    sliderAng.value()++;
-  }
-  else if(key == '-'){
-    sliderAng.value()--;
   }
 }
