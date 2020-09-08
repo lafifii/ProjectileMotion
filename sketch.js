@@ -85,7 +85,7 @@ function printInfo(){
   txt = "Densidad: " + p.rho + " kg/m^3"
   text(txt, w - textWidth(txt) - 10 , 140)
 
-  txt = "Altura: " + (-p.dummy_y) + " m"
+  txt = "Altura: " + (-p.dummy_y)/2 + " m"
   text(txt, w - textWidth(txt) - 10 , 160)
 
   txt = "Masa: " + sliderM.value() + " g"
