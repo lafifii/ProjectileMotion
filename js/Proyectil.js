@@ -5,7 +5,7 @@ function Proyectil(){
 
   this.rho = 1.20
   this.cd = 0.500
-  this.m = 0.200
+  this.m = 200
   this.rad = 0.2
   this.ts = [0.00]
   this.x = [0]
@@ -19,25 +19,26 @@ function Proyectil(){
   this.dummy_y = 0;
 
   this.scale_xy = function(xx, yy){
-    return [w/15 + xx, h/10 + yy*10];
+    return [w/15 + xx, h/10 + yy];
   }
 
   this.draw_axis = function(){
     stroke(255,255,255,20)
-    for(var i = 0; i < h - h/10; i+=30){
-      line(0, h/10 + i*5, w, h/10 + i*5);
+    for(var i = (h - h/10)/10; i >= 0; i--){
+      line(0, i*10, w, i*10);
     }
 
-    for(var i = 0; i < w - w/15; i+=30){
-      line(i, 0, i, h - h/10);
+    for(var i = 0; i < w - w/15; i++){
+      line(i*10, 0, i*10, h - h/10);
     }
 
   }
 
-  this.update = function(angle, rad){
+  this.update = function(angle, rad,m){
     if(this.animate >= 0) return
     this.rad = rad
     this.angle = angle
+    this.m = m
   }
 
   this.draw = function(){
@@ -114,14 +115,14 @@ function Proyectil(){
 
      this.ts = [0.00]
      this.x = [0]
-     this.y = [-this.dummy_y/10]
+     this.y = [-this.dummy_y]
 
 
 
      this.vx = [v0 * Math.cos(angle)]
      this.vy = [v0 * Math.sin(angle)]
-     var ax = [-(this.k/this.m) * 60.0 * this.vx[0]]
-     var ay = [-g - ((this.k/this.m) * 60.0 * this.vy[0])]
+     var ax = [-(this.k/this.m) * v0 * this.vx[0]]
+     var ay = [-g - ((this.k/this.m) * v0 * this.vy[0])]
 
      var i = 0;
      var delta = 0.01;
@@ -151,7 +152,7 @@ function Proyectil(){
   this.calculate_no_air = function(angle, v0){
 
      this.x2 = [0]
-     this.y2 = [-this.dummy_y/10]
+     this.y2 = [-this.dummy_y]
      this.ts2 = [0]
 
 

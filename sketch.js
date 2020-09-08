@@ -2,7 +2,7 @@ var p;
 var w = window.innerWidth;
 var h = window.innerHeight;
 
-var sliderAng, sliderRad, sliderV0, buttonStart;
+var sliderAng, sliderRad, sliderV0, sliderM, buttonStart;
 
 
 window.onresize = function() {
@@ -25,6 +25,8 @@ function preload(){
   sliderRad = createSlider(1,100,20)
   sliderRad.position(20, 120)
 
+  sliderM = createSlider(200,500,200)
+  sliderM.position(20, 160)
 
 }
 
@@ -40,7 +42,7 @@ function draw() {
   background(0);
 
 
-  p.update(sliderAng.value(), sliderRad.value()/100)
+  p.update(sliderAng.value(), sliderRad.value()/100, sliderM.value())
   p.draw()
 
   printSliders()
@@ -59,6 +61,7 @@ function printSliders(){
   text('v0', sliderV0.x + sliderV0.width/2 - textWidth('v0')/2, sliderV0.y)
   text('angulo', sliderAng.x + sliderAng.width/2 - textWidth('angulo')/2, sliderAng.y)
   text('radio', sliderRad.x + sliderRad.width/2 - textWidth('radio')/2, sliderRad.y)
+  text('masa', sliderRad.x + sliderM.width/2 - textWidth('masa')/2, sliderM.y)
 }
 
 function printInfo(){
@@ -88,6 +91,8 @@ function printInfo(){
   txt = "Altura: " + (-p.dummy_y) + " m"
   text(txt, w - textWidth(txt) - 10 , 180)
 
+  txt = "Masa: " + p.m + " g"
+  text(txt, w - textWidth(txt) - 10 , 200)
 }
 
 
