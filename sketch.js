@@ -108,7 +108,7 @@ function printInfo(){
 }
 
 
-function mousePressed(){
+function mouseClicked(){
   if(buttonStart.click()){
     p.calculate(sliderV0.value(), sliderAng.value());
   }
