@@ -1,13 +1,13 @@
 var p;
-var w = window.innerWidth;
-var h = window.innerHeight;
+var w = window.innerWidth
+var h = window.innerHeight
 
 var sliderAng, sliderRad, sliderV0, sliderM, buttonStart;
 
 
 window.onresize = function() {
-  w = window.innerWidth;
-  h = window.innerHeight;
+  w = window.innerWidth > w ? window.innerWidth : w;
+  h = window.innerHeight > h ? window.innerHeight : h;
   resizeCanvas(w, h);
   buttonStart.resize()
 }
