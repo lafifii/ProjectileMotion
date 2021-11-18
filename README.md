@@ -1,2 +1,2 @@
 # Projectile Motion
-projectile motion animation for MA497 UPC
+Project for MA497 UPC (Course: Physics for Computer Science)
