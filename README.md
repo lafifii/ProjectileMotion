@@ -1,2 +1,2 @@
-# proyectil
-animacion de lanzamiento de proyectcil para MA497
+# Projectile Motion
+projectile motion animation for MA497
