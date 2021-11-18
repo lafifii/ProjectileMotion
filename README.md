@@ -1,4 +1,2 @@
 # proyectil
-dd fisica para cc
-
-animacion de MRUV para MA497
+animacion de lanzamiento de proyectcil para MA497
